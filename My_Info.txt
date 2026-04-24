@@ -1,0 +1,56 @@
+H:\CANDLELAB_INDICES
+│
+├── config/
+│   ├── index_list.csv              # NIFTY, BANKNIFTY, etc.
+│   └── settings.yaml              # parameters (future use)
+│
+├── data/
+│   ├── raw/
+│   │   ├── nifty.csv
+│   │   ├── banknifty.csv
+│   │   ├── finnifty.csv
+│   │   └── vix.csv
+│   │
+│   └── processed/
+│       ├── nifty_clean.csv
+│       ├── banknifty_clean.csv
+│       └── vix_clean.csv
+│
+├── scanners/
+│   ├── structure/
+│   │   ├── 01_basic_structure.py
+│   │   ├── 02_swing_structure.py      # (upgrade later)
+│   │   └── 03_trend_classification.py
+│   │
+│   ├── volatility/
+│   │   └── 01_vix_regime.py
+│   │
+│   ├── breadth/
+│   │   ├── 01_advance_decline.py
+│   │   └── 02_sector_strength.py
+│   │
+│   ├── candle_patterns/
+│   │   ├── 01_engulfing_index.py
+│   │   ├── 02_hammer_index.py
+│   │   └── 03_nr7_index.py
+│   │
+│   └── options/
+│       ├── 01_pcr_index.py
+│       └── 02_oi_analysis.py
+│
+├── engines/
+│   ├── market_context_engine.py     # 🔥 CORE BRAIN
+│   ├── signal_fusion_engine.py      # combine everything
+│   └── scoring_engine.py            # rank strength
+│
+├── analysis/
+│   ├── structure/
+│   ├── volatility/
+│   ├── breadth/
+│   ├── options/
+│   └── final_bias/
+│
+├── logs/
+│
+├── run_all_indices.bat              # master run
+└── README.md

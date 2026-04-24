@@ -1,0 +1,498 @@
+Pipeline started at 20-04-2026 19:11:25.45 
+Running: 01_pcr_engine.py 
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\pcr_day\01_pcr_engine.py", line 11, in <module>
+    print("\u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-31: character maps to <undefined>
+❌ ERROR in 01_pcr_engine.py 
+Time: 19:11:26.35 -
+Running: 01_adx_index.py 
++-----------------------+
+| ADX INDEX SCANNER     |
+| Trend Strength Engine |
++-----------------------+
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\adx\01_adx_index.py", line 173, in <module>
+    console.print(f"[yellow]\U0001f4c5 Data Date Used: {final_date}[/yellow]")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 1697, in print
+    with self:
+         ^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 870, in __exit__
+    self._exit_buffer()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 826, in _exit_buffer
+    self._check_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2038, in _check_buffer
+    self._write_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2074, in _write_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 441, in write_styled
+    self.write_text(text)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 402, in write_text
+    self.write(text)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4c5' in position 0: character maps to <undefined>
+❌ ERROR in 01_adx_index.py 
+Time: 19:11:26.77 -
+Running: 01_bullish_engulfing_exact.py 
++-------------------------+
+| INDEX BULLISH ENGULFING |
+| Price Action Engine     |
++-------------------------+
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\engulfing_candle\01_bullish_engulfing_exact.py", line 137, in <module>
+    console.print(f"[yellow]\U0001f4c5 Data Date Used: {final_date}[/yellow]")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 1697, in print
+    with self:
+         ^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 870, in __exit__
+    self._exit_buffer()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 826, in _exit_buffer
+    self._check_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2038, in _check_buffer
+    self._write_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2074, in _write_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 441, in write_styled
+    self.write_text(text)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 402, in write_text
+    self.write(text)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4c5' in position 0: character maps to <undefined>
+❌ ERROR in 01_bullish_engulfing_exact.py 
+Time: 19:11:27.35 -
+Running: 02_bearish_engulfing_exact.py 
++-------------------------+
+| INDEX BEARISH ENGULFING |
+| Price Action Engine     |
++-------------------------+
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\engulfing_candle\02_bearish_engulfing_exact.py", line 134, in <module>
+    console.print(f"[yellow]\U0001f4c5 Data Date Used: {final_date}[/yellow]")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 1697, in print
+    with self:
+         ^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 870, in __exit__
+    self._exit_buffer()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 826, in _exit_buffer
+    self._check_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2038, in _check_buffer
+    self._write_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2074, in _write_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 441, in write_styled
+    self.write_text(text)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 402, in write_text
+    self.write(text)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4c5' in position 0: character maps to <undefined>
+❌ ERROR in 02_bearish_engulfing_exact.py 
+Time: 19:11:27.89 -
+Running: 01_gravestone_doji_in_uptrend.py 
++----------------------------+
+| INDEX GRAVESTONE DOJI      |
+| Reversal Exhaustion Engine |
++----------------------------+
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\gravestone_candle\01_gravestone_doji_in_uptrend.py", line 137, in <module>
+    console.print(f"[yellow]\U0001f4c5 Data Date Used: {final_date}[/yellow]")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 1697, in print
+    with self:
+         ^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 870, in __exit__
+    self._exit_buffer()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 826, in _exit_buffer
+    self._check_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2038, in _check_buffer
+    self._write_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2074, in _write_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 441, in write_styled
+    self.write_text(text)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 402, in write_text
+    self.write(text)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4c5' in position 0: character maps to <undefined>
+❌ ERROR in 01_gravestone_doji_in_uptrend.py 
+Time: 19:11:28.47 -
+Running: hammer_confirmation.py 
++-----------------------------+
+| INDEX HAMMER + CONFIRMATION |
+| Reversal Entry Engine       |
++-----------------------------+
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\Hammer\hammer_confirmation.py", line 144, in <module>
+    console.print(f"[yellow]\U0001f4c5 Data Date Used: {final_date}[/yellow]")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 1697, in print
+    with self:
+         ^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 870, in __exit__
+    self._exit_buffer()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 826, in _exit_buffer
+    self._check_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2038, in _check_buffer
+    self._write_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2074, in _write_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 441, in write_styled
+    self.write_text(text)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 402, in write_text
+    self.write(text)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4c5' in position 0: character maps to <undefined>
+❌ ERROR in hammer_confirmation.py 
+Time: 19:11:29.00 -
+Running: 01_shooting_star_uptrend.py 
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\shooting_star\01_shooting_star_uptrend.py", line 9, in <module>
+    print("\u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-31: character maps to <undefined>
+❌ ERROR in 01_shooting_star_uptrend.py 
+Time: 19:11:29.60 -
+Running: 01_hanging_man_scan.py 
++---------------------+
+| INDEX HANGING MAN   |
+| Top Reversal Engine |
++---------------------+
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\hangingman\01_hanging_man_scan.py", line 151, in <module>
+    console.print(f"[yellow]\U0001f4c5 Data Date Used: {final_date}[/yellow]")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 1697, in print
+    with self:
+         ^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 870, in __exit__
+    self._exit_buffer()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 826, in _exit_buffer
+    self._check_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2038, in _check_buffer
+    self._write_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2074, in _write_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 441, in write_styled
+    self.write_text(text)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 402, in write_text
+    self.write(text)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4c5' in position 0: character maps to <undefined>
+❌ ERROR in 01_hanging_man_scan.py 
+Time: 19:11:30.00 -
+Running: 01_harami_scan.py 
++-------------------------+
+| INDEX HARAMI            |
+| Pause / Reversal Signal |
++-------------------------+
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\harami\01_harami_scan.py", line 151, in <module>
+    console.print(f"[yellow]\U0001f4c5 Data Date Used: {final_date}[/yellow]")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 1697, in print
+    with self:
+         ^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 870, in __exit__
+    self._exit_buffer()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 826, in _exit_buffer
+    self._check_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2038, in _check_buffer
+    self._write_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2074, in _write_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 441, in write_styled
+    self.write_text(text)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 402, in write_text
+    self.write(text)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4c5' in position 0: character maps to <undefined>
+❌ ERROR in 01_harami_scan.py 
+Time: 19:11:30.57 -
+Running: inside_bar_scan.py 
++------------------------+
+| INDEX INSIDE BAR       |
+| Volatility Compression |
++------------------------+
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\inside_bar_scan\inside_bar_scan.py", line 114, in <module>
+    console.print(f"[yellow]\U0001f4c5 Data Date Used: {final_date}[/yellow]")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 1697, in print
+    with self:
+         ^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 870, in __exit__
+    self._exit_buffer()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 826, in _exit_buffer
+    self._check_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2038, in _check_buffer
+    self._write_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2074, in _write_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 441, in write_styled
+    self.write_text(text)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 402, in write_text
+    self.write(text)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4c5' in position 0: character maps to <undefined>
+❌ ERROR in inside_bar_scan.py 
+Time: 19:11:31.15 -
+Running: fno_nr7_scan.py 
++------------------------+
+| INDEX NR7              |
+| Volatility Contraction |
++------------------------+
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\nr7\fno_nr7_scan.py", line 121, in <module>
+    console.print(f"[yellow]\U0001f4c5 Data Date Used: {final_date}[/yellow]")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 1697, in print
+    with self:
+         ^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 870, in __exit__
+    self._exit_buffer()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 826, in _exit_buffer
+    self._check_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2038, in _check_buffer
+    self._write_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2074, in _write_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 441, in write_styled
+    self.write_text(text)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 402, in write_text
+    self.write(text)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4c5' in position 0: character maps to <undefined>
+❌ ERROR in fno_nr7_scan.py 
+Time: 19:11:31.70 -
+Running: 01_rsi_scan.py 
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\rsi\01_rsi_scan.py", line 11, in <module>
+    print("\u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-31: character maps to <undefined>
+❌ ERROR in 01_rsi_scan.py 
+Time: 19:11:32.25 -
+Running: 02_rsi_divergence_scan.py 
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\rsi_divergence\02_rsi_divergence_scan.py", line 9, in <module>
+    print("\u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-31: character maps to <undefined>
+❌ ERROR in 02_rsi_divergence_scan.py 
+Time: 19:11:32.68 -
+Running: 01_morning_star_scanner.py 
++------------------------+
+| INDEX MORNING STAR     |
+| Reversal Bottom Engine |
++------------------------+
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\morning_evening_star\01_morning_star_scanner.py", line 112, in <module>
+    console.print(f"[yellow]\U0001f4c5 Data Date Used: {final_date}[/yellow]")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 1697, in print
+    with self:
+         ^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 870, in __exit__
+    self._exit_buffer()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 826, in _exit_buffer
+    self._check_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2038, in _check_buffer
+    self._write_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2074, in _write_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 441, in write_styled
+    self.write_text(text)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 402, in write_text
+    self.write(text)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4c5' in position 0: character maps to <undefined>
+❌ ERROR in 01_morning_star_scanner.py 
+Time: 19:11:33.12 -
+Running: 02_evening_star_scanner.py 
++---------------------+
+| INDEX EVENING STAR  |
+| Top Reversal Engine |
++---------------------+
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\morning_evening_star\02_evening_star_scanner.py", line 112, in <module>
+    console.print(f"[yellow]\U0001f4c5 Data Date Used: {final_date}[/yellow]")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 1697, in print
+    with self:
+         ^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 870, in __exit__
+    self._exit_buffer()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 826, in _exit_buffer
+    self._check_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2038, in _check_buffer
+    self._write_buffer()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\console.py", line 2074, in _write_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 441, in write_styled
+    self.write_text(text)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\site-packages\rich\_win32_console.py", line 402, in write_text
+    self.write(text)
+    ~~~~~~~~~~^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4c5' in position 0: character maps to <undefined>
+❌ ERROR in 02_evening_star_scanner.py 
+Time: 19:11:33.67 -
+Running: 01_index_breadth_engine.py 
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\breadth\01_index_breadth_engine.py", line 21, in <module>
+    print("\u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-31: character maps to <undefined>
+❌ ERROR in 01_index_breadth_engine.py 
+Time: 19:11:34.22 -
+Running: 01_vwap_index.py 
+Traceback (most recent call last):
+  File "H:\Candle-Lab-Indices\Scanners\vwap\01_vwap_index.py", line 8, in <module>
+    print("\u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Harshal\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-31: character maps to <undefined>
+❌ ERROR in 01_vwap_index.py 
+Time: 19:11:34.65 -
+Started at: 19:11:25.45 
+Ended at  : 19:11:35.09 
