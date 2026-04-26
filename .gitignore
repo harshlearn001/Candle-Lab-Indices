@@ -2,17 +2,52 @@
 # DATA (IGNORE OUTPUT FILES)
 # =====================
 analysis/**/*.csv
+analysis/**/*.xlsx
+
 data/
 logs/
+
+# =====================
+# IGNORE LOCAL CONFIG FILES
+# =====================
+config/*.csv
+
+# (OPTIONAL) Keep template config files
+!config/*.example.csv
 
 # =====================
 # PYTHON
 # =====================
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
 # =====================
-# IDE / EDITOR
+# ENV / IDE
 # =====================
+.env
+.venv/
+venv/
+env/
 .vscode/
 .idea/
+
+# =====================
+# OS FILES
+# =====================
+.DS_Store
+Thumbs.db
+
+# =====================
+# TEMP / LOGS
+# =====================
+*.log
+*.out
+*.tmp
+
+# =====================
+# BACKUPS
+# =====================
+*.bak
+*.old
