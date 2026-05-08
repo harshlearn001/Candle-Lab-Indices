@@ -26,11 +26,12 @@ console.print(Panel.fit(
 # =================================================
 INDEX_DIR = Path(r"H:\MarketForge\data\master\Indices_master")
 
-OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\candle_patterns")
+# ✅ SAME FOLDER AS ENGULFING
+OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\Gravestone")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 results = []
-all_dates = []   # ✅ FIX
+all_dates = []
 
 # =================================================
 # MAIN LOOP
@@ -46,16 +47,13 @@ for file in files:
             continue
 
         df.columns = [c.strip().upper() for c in df.columns]
-
         df.rename(columns={"TRADE_DATE": "DATE"}, inplace=True)
 
         required = {"DATE", "OPEN", "HIGH", "LOW", "CLOSE"}
         if not required.issubset(df.columns):
             continue
 
-        # =================================================
-        # 🔥 DATE FIX
-        # =================================================
+        # DATE FIX
         if df["DATE"].dtype in ["int64", "float64"]:
             df["DATE"] = pd.to_datetime(df["DATE"].astype(str), errors="coerce")
         else:
@@ -68,12 +66,9 @@ for file in files:
         if len(df) < 10:
             continue
 
-        # ✅ collect date
         all_dates.append(df["DATE"].max())
 
-        # --------------------------------------------------
         # UPTREND CHECK
-        # --------------------------------------------------
         if df.iloc[-3]["CLOSE"] <= df.iloc[-6]["CLOSE"]:
             continue
 
@@ -93,19 +88,15 @@ for file in files:
         upper_pct = upper / rng
         lower_pct = lower / rng
 
-        # --------------------------------------------------
         # RANGE QUALITY
-        # --------------------------------------------------
         recent_ranges = df.iloc[-10:-1]["HIGH"] - df.iloc[-10:-1]["LOW"]
         if rng < np.median(recent_ranges):
             continue
 
-        # --------------------------------------------------
-        # GRAVESTONE LOGIC
-        # --------------------------------------------------
+        # GRAVESTONE CONDITION
         if (
-            body_pct <= 0.20 and
-            upper_pct >= 0.50 and
+            body_pct <= 0.25 and
+            upper_pct >= 0.45 and
             lower_pct <= 0.20
         ):
 
@@ -115,13 +106,16 @@ for file in files:
 
             results.append({
                 "Index": symbol,
+                "Pattern": "Gravestone",
+                "Direction": "Bearish",
                 "Date": c["DATE"].strftime("%Y-%m-%d"),
                 "Close": round(cl, 2),
                 "UpperWick%": round(upper_pct * 100, 2),
                 "Strength": strength
             })
 
-    except:
+    except Exception as e:
+        print(f"[red]Error in {file.name}: {e}[/red]")
         continue
 
 # =================================================
@@ -134,12 +128,17 @@ else:
 
 OUT_FILE = OUT_DIR / f"index_gravestone_{final_date}.csv"
 
+# DEBUG
+print(f"\nDEBUG → Files Checked: {len(files)}")
+print(f"DEBUG → Signals Found: {len(results)}")
+print(f"DEBUG → Saving to: {OUT_FILE}")
+
 console.print(f"[yellow]📅 Data Date Used: {final_date}[/yellow]")
 
 # =================================================
 # SUMMARY
 # =================================================
-console.rule("[bold cyan]GRAVESTONE SUMMARY[/bold cyan]")
+console.rule("[bold magenta]GRAVESTONE SUMMARY[/bold magenta]")
 
 console.print(f"[cyan]📊 Total Checked:[/cyan] {len(files)}")
 console.print(f"[magenta]🔥 Signals Found:[/magenta] {len(results)}")
@@ -149,8 +148,13 @@ console.print(f"[magenta]🔥 Signals Found:[/magenta] {len(results)}")
 # =================================================
 df_out = pd.DataFrame(results)
 
-if not df_out.empty:
-
+# ALWAYS SAVE
+if df_out.empty:
+    df_out = pd.DataFrame({
+        "Message": ["No Gravestone Doji Found"],
+        "Date": [final_date]
+    })
+else:
     df_out = df_out.sort_values("UpperWick%", ascending=False).reset_index(drop=True)
 
     table = Table(title="🟣 INDEX GRAVESTONE DOJI")
@@ -164,16 +168,17 @@ if not df_out.empty:
 
         table.add_row(
             f"[{color}]{row['Index']}[/{color}]",
-            f"[{color}]{row['Date']}[/{color}]",
-            f"[{color}]{row['Close']}[/{color}]",
-            f"[{color}]{row['UpperWick%']}[/{color}]",
-            f"[{color}]{row['Strength']}[/{color}]"
+            row["Pattern"],
+            f"[{color}]{row['Direction']}[/{color}]",
+            row["Date"],
+            str(row["Close"]),
+            str(row["UpperWick%"]),
+            row["Strength"]
         )
 
     console.print(table)
 
-    df_out.to_csv(OUT_FILE, index=False)
-    console.print(f"\n[bold magenta]✔ Saved → {OUT_FILE}[/bold magenta]")
+# SAVE FILE
+df_out.to_csv(OUT_FILE, index=False)
 
-else:
-    console.print("\n[green]✔ No Gravestone Doji Found[/green]")
+console.print(f"\n[bold magenta]✔ Saved → {OUT_FILE}[/bold magenta]")

@@ -25,11 +25,12 @@ console.print(Panel.fit(
 # =====================================================
 INDEX_DIR = Path(r"H:\MarketForge\data\master\Indices_master")
 
-OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\candle_patterns")
+# ✅ NEW FOLDER
+OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\HangingMan")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 signals = []
-all_dates = []   # ✅ FIX
+all_dates = []
 files = list(INDEX_DIR.glob("*.csv"))
 
 # =====================================================
@@ -60,9 +61,7 @@ for file in files:
         if not required.issubset(df.columns):
             continue
 
-        # =====================================================
-        # 🔥 DATE FIX
-        # =====================================================
+        # DATE FIX
         if df["DATE"].dtype in ["int64", "float64"]:
             df["DATE"] = pd.to_datetime(df["DATE"].astype(str), errors="coerce")
         else:
@@ -75,18 +74,13 @@ for file in files:
         if len(df) < 220:
             continue
 
-        # ✅ collect date
         all_dates.append(df["DATE"].max())
 
-        # =====================================================
         # INDICATORS
-        # =====================================================
         df['EMA50'] = df['CLOSE'].ewm(span=50).mean()
         df['SMA200'] = df['CLOSE'].rolling(window=200).mean()
 
-        # =====================================================
         # LAST 5 CANDLES
-        # =====================================================
         for i in range(-5, 0):
 
             row = df.iloc[i]
@@ -127,6 +121,8 @@ for file in files:
 
                 signals.append({
                     "Index": file.stem,
+                    "Pattern": "HangingMan",
+                    "Direction": "Bearish",
                     "Date": row['DATE'].strftime("%Y-%m-%d"),
                     "Close": round(close, 2),
                     "Strength": round(strength, 2),
@@ -135,7 +131,8 @@ for file in files:
 
                 break
 
-    except:
+    except Exception as e:
+        print(f"[red]Error in {file.name}: {e}[/red]")
         continue
 
 # =====================================================
@@ -147,6 +144,11 @@ else:
     final_date = datetime.now().strftime("%Y-%m-%d")
 
 OUT_FILE = OUT_DIR / f"index_hangingman_{final_date}.csv"
+
+# DEBUG
+print(f"\nDEBUG → Files Checked: {len(files)}")
+print(f"DEBUG → Signals Found: {len(signals)}")
+print(f"DEBUG → Saving to: {OUT_FILE}")
 
 console.print(f"[yellow]📅 Data Date Used: {final_date}[/yellow]")
 
@@ -163,8 +165,13 @@ console.print(f"[red]🔥 Signals Found:[/red] {len(signals)}")
 # =====================================================
 df_out = pd.DataFrame(signals)
 
-if not df_out.empty:
-
+# ALWAYS SAVE
+if df_out.empty:
+    df_out = pd.DataFrame({
+        "Message": ["No Hanging Man Found"],
+        "Date": [final_date]
+    })
+else:
     df_out = df_out.sort_values("Strength", ascending=False)
 
     table = Table(title="🔻 INDEX HANGING MAN")
@@ -178,6 +185,8 @@ if not df_out.empty:
 
         table.add_row(
             f"[{color}]{row['Index']}[/{color}]",
+            row["Pattern"],
+            f"[{color}]{row["Direction"]}[/{color}]",
             row["Date"],
             str(row["Close"]),
             str(row["Strength"]),
@@ -186,8 +195,7 @@ if not df_out.empty:
 
     console.print(table)
 
-    df_out.to_csv(OUT_FILE, index=False)
-    console.print(f"\n[bold red]✔ Saved → {OUT_FILE}[/bold red]")
+# SAVE FILE
+df_out.to_csv(OUT_FILE, index=False)
 
-else:
-    console.print("\n[green]✔ No Top Exhaustion Found (Trend Strong)[/green]")
+console.print(f"\n[bold red]✔ Saved → {OUT_FILE}[/bold red]")

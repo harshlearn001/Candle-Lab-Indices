@@ -25,11 +25,12 @@ console.print(Panel.fit(
 # =================================================
 INDEX_DIR = Path(r"H:\MarketForge\data\master\Indices_master")
 
-OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\candle_patterns")
+# ✅ SAME MASTER FOLDER
+OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\Green_Volume")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 results = []
-all_dates = []   # ✅ FIX
+all_dates = []
 
 # =================================================
 # MAIN LOOP
@@ -45,16 +46,13 @@ for file in files:
             continue
 
         df.columns = [c.strip().upper() for c in df.columns]
-
         df.rename(columns={"TRADE_DATE": "DATE"}, inplace=True)
 
         required = {"DATE", "OPEN", "HIGH", "LOW", "CLOSE"}
         if not required.issubset(df.columns):
             continue
 
-        # =================================================
-        # 🔥 DATE FIX
-        # =================================================
+        # DATE FIX
         if df["DATE"].dtype in ["int64", "float64"]:
             df["DATE"] = pd.to_datetime(df["DATE"].astype(str), errors="coerce")
         else:
@@ -67,28 +65,27 @@ for file in files:
         if len(df) < 4:
             continue
 
-        # ✅ collect date
         all_dates.append(df["DATE"].max())
 
         last4 = df.tail(4)
 
-        # --------------------------------------------------
+        # =================================================
         # 4 GREEN CANDLES
-        # --------------------------------------------------
+        # =================================================
         if not (last4["CLOSE"] > last4["OPEN"]).all():
             continue
 
-        # --------------------------------------------------
+        # =================================================
         # RANGE EXPANSION
-        # --------------------------------------------------
+        # =================================================
         ranges = (last4["HIGH"] - last4["LOW"]).values
 
         if not (ranges[0] < ranges[1] < ranges[2] < ranges[3]):
             continue
 
-        # --------------------------------------------------
+        # =================================================
         # METRICS
-        # --------------------------------------------------
+        # =================================================
         momentum = (last4["CLOSE"] - last4["OPEN"]).sum()
         range_growth = ranges[3] / ranges[0]
 
@@ -96,6 +93,8 @@ for file in files:
 
         results.append({
             "Index": file.stem,
+            "Pattern": "Accumulation",
+            "Direction": "Bullish",
             "Date": last4.iloc[-1]["DATE"].strftime("%Y-%m-%d"),
             "Close": round(last4.iloc[-1]["CLOSE"], 2),
             "RangeGrowth": round(range_growth, 2),
@@ -103,7 +102,8 @@ for file in files:
             "Strength": strength
         })
 
-    except:
+    except Exception as e:
+        print(f"[red]Error in {file.name}: {e}[/red]")
         continue
 
 # =================================================
@@ -115,6 +115,11 @@ else:
     final_date = datetime.now().strftime("%Y-%m-%d")
 
 OUT_FILE = OUT_DIR / f"index_accumulation_{final_date}.csv"
+
+# DEBUG
+print(f"\nDEBUG → Files Checked: {len(files)}")
+print(f"DEBUG → Signals Found: {len(results)}")
+print(f"DEBUG → Saving to: {OUT_FILE}")
 
 console.print(f"[yellow]📅 Data Date Used: {final_date}[/yellow]")
 
@@ -131,8 +136,13 @@ console.print(f"[blue]🔥 Signals Found:[/blue] {len(results)}")
 # =================================================
 df_out = pd.DataFrame(results)
 
-if not df_out.empty:
-
+# ALWAYS SAVE
+if df_out.empty:
+    df_out = pd.DataFrame({
+        "Message": ["No Accumulation Found"],
+        "Date": [final_date]
+    })
+else:
     df_out = df_out.sort_values("RangeGrowth", ascending=False).reset_index(drop=True)
 
     table = Table(title="🔵 INDEX ACCUMULATION")
@@ -146,6 +156,8 @@ if not df_out.empty:
 
         table.add_row(
             f"[{color}]{row['Index']}[/{color}]",
+            row["Pattern"],
+            f"[{color}]{row['Direction']}[/{color}]",
             row["Date"],
             str(row["Close"]),
             str(row["RangeGrowth"]),
@@ -155,8 +167,7 @@ if not df_out.empty:
 
     console.print(table)
 
-    df_out.to_csv(OUT_FILE, index=False)
-    console.print(f"\n[bold blue]✔ Saved → {OUT_FILE}[/bold blue]")
+# SAVE FILE
+df_out.to_csv(OUT_FILE, index=False)
 
-else:
-    console.print("\n[red]❌ No Accumulation Found[/red]")
+console.print(f"\n[bold blue]✔ Saved → {OUT_FILE}[/bold blue]")

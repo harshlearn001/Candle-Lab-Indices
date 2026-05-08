@@ -18,7 +18,8 @@ print("╰───────────────────────�
 # =====================================================
 BASE_DIR = Path(r"H:\MarketForge\data\master\option_master\INDICES")
 
-OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\options")
+# ✅ KEEP SEPARATE (OPTIONS DATA)
+OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\Options")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 TARGETS = ["NIFTY", "BANKNIFTY", "FINNIFTY"]
@@ -45,18 +46,14 @@ for file in all_files:
 
         df.columns = df.columns.str.upper().str.strip()
 
-        # =====================================================
-        # 🔥 DATE FROM FILE (FIXED)
-        # =====================================================
+        # DATE FROM FILE
         try:
             file_date = datetime.fromtimestamp(file.stat().st_mtime)
             all_dates.append(file_date)
         except:
             file_date = None
 
-        # =====================================================
         # OI FIX
-        # =====================================================
         if "OPEN_INT" not in df.columns:
             if "OPENINTEREST" in df.columns:
                 df["OPEN_INT"] = df["OPENINTEREST"]
@@ -86,17 +83,24 @@ for file in all_files:
         # =====================================================
         if pcr > 1.3:
             signal = "EXTREME_BULLISH"
+            direction = "Bullish"
         elif pcr > 1.1:
             signal = "BULLISH"
+            direction = "Bullish"
         elif pcr < 0.7:
             signal = "EXTREME_BEARISH"
+            direction = "Bearish"
         elif pcr < 0.9:
             signal = "BEARISH"
+            direction = "Bearish"
         else:
             signal = "NEUTRAL"
+            direction = "Neutral"
 
         rows.append({
             "Index": symbol,
+            "Pattern": "PCR",
+            "Direction": direction,
             "Date": file_date.strftime("%Y-%m-%d") if file_date else "NA",
             "File": file.name,
             "CE_OI": int(ce_oi),
@@ -105,17 +109,14 @@ for file in all_files:
             "Signal": signal
         })
 
-    except:
+    except Exception as e:
+        print(f"Error in {file.name}: {e}")
         continue
 
 # =====================================================
 # BUILD DATAFRAME
 # =====================================================
 df = pd.DataFrame(rows)
-
-if df.empty:
-    print("\n❌ No PCR data found")
-    exit()
 
 # =====================================================
 # FINAL DATE
@@ -130,19 +131,20 @@ OUT_FILE = OUT_DIR / f"index_pcr_full_{final_date}.csv"
 print(f"\n📅 Data Date Used: {final_date}")
 
 # =====================================================
-# SORT
+# ALWAYS SAVE
 # =====================================================
-df = df.sort_values(["Index", "Date"], ascending=[True, False])
+if df.empty:
+    df = pd.DataFrame({
+        "Message": ["No PCR data found"],
+        "Date": [final_date]
+    })
+else:
+    df = df.sort_values(["Index", "Date"], ascending=[True, False])
 
-# =====================================================
-# PRINT ALL PCR
-# =====================================================
-print("\n📊 ALL PCR DATA")
-print(df.to_string(index=False))
+    print("\n📊 ALL PCR DATA")
+    print(df.to_string(index=False))
 
-# =====================================================
 # SAVE
-# =====================================================
 df.to_csv(OUT_FILE, index=False)
 
 print(f"\n✔ Saved → {OUT_FILE}")

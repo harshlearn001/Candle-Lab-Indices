@@ -25,7 +25,8 @@ console.print(Panel.fit(
 # =================================================
 INDEX_DIR = Path(r"H:\MarketForge\data\master\Indices_master")
 
-OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\candle_patterns")
+# ✅ SAME FOLDER AS BULLISH
+OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\Engulfing")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # =================================================
@@ -34,7 +35,7 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 MIN_BODY_RATIO = 0.40
 
 results = []
-all_dates = []   # ✅ IMPORTANT
+all_dates = []
 
 # =================================================
 # MAIN LOOP
@@ -50,18 +51,13 @@ for file in files:
             continue
 
         df.columns = [c.strip().upper() for c in df.columns]
-
-        df.rename(columns={
-            "TRADE_DATE": "DATE"
-        }, inplace=True)
+        df.rename(columns={"TRADE_DATE": "DATE"}, inplace=True)
 
         required = {"DATE", "OPEN", "HIGH", "LOW", "CLOSE"}
         if not required.issubset(df.columns):
             continue
 
-        # =================================================
-        # 🔥 DATE FIX
-        # =================================================
+        # DATE FIX
         if df["DATE"].dtype in ["int64", "float64"]:
             df["DATE"] = pd.to_datetime(df["DATE"].astype(str), errors="coerce")
         else:
@@ -74,15 +70,12 @@ for file in files:
         if len(df) < 2:
             continue
 
-        # ✅ collect date
         all_dates.append(df["DATE"].max())
 
         prev = df.iloc[-2]
         curr = df.iloc[-1]
 
-        # =================================================
         # BODY RATIO
-        # =================================================
         def body_ratio(c):
             rng = c["HIGH"] - c["LOW"]
             if rng <= 0:
@@ -101,7 +94,7 @@ for file in files:
         if (
             prev["CLOSE"] > prev["OPEN"] and
             curr["CLOSE"] < curr["OPEN"] and
-            curr["OPEN"]  > prev["CLOSE"] and
+            curr["OPEN"] > prev["CLOSE"] and
             curr["CLOSE"] < prev["OPEN"]
         ):
 
@@ -118,7 +111,8 @@ for file in files:
                 "Strength": strength
             })
 
-    except:
+    except Exception as e:
+        print(f"[red]Error in {file.name}: {e}[/red]")
         continue
 
 # =================================================
@@ -131,12 +125,17 @@ else:
 
 OUT_FILE = OUT_DIR / f"index_bearish_engulfing_{final_date}.csv"
 
+# DEBUG
+print(f"\nDEBUG → Files Checked: {len(files)}")
+print(f"DEBUG → Signals Found: {len(results)}")
+print(f"DEBUG → Saving to: {OUT_FILE}")
+
 console.print(f"[yellow]📅 Data Date Used: {final_date}[/yellow]")
 
 # =================================================
 # SUMMARY
 # =================================================
-console.rule("[bold cyan]ENGULFING SUMMARY[/bold cyan]")
+console.rule("[bold red]BEARISH ENGULFING SUMMARY[/bold red]")
 
 console.print(f"[cyan]📊 Total Checked:[/cyan] {len(files)}")
 console.print(f"[red]🔥 Signals Found:[/red] {len(results)}")
@@ -146,8 +145,13 @@ console.print(f"[red]🔥 Signals Found:[/red] {len(results)}")
 # =================================================
 df_out = pd.DataFrame(results)
 
-if not df_out.empty:
-
+# ALWAYS SAVE FILE
+if df_out.empty:
+    df_out = pd.DataFrame({
+        "Message": ["No Bearish Engulfing Found"],
+        "Date": [final_date]
+    })
+else:
     df_out = df_out.sort_values("Date", ascending=False).reset_index(drop=True)
 
     table = Table(title="🔴 INDEX BEARISH ENGULFING")
@@ -168,8 +172,7 @@ if not df_out.empty:
 
     console.print(table)
 
-    df_out.to_csv(OUT_FILE, index=False)
-    console.print(f"\n[bold red]✔ Saved → {OUT_FILE}[/bold red]")
+# SAVE FILE
+df_out.to_csv(OUT_FILE, index=False)
 
-else:
-    console.print("\n[green]✔ No Bearish Engulfing Found[/green]")
+console.print(f"\n[bold red]✔ Saved → {OUT_FILE}[/bold red]")

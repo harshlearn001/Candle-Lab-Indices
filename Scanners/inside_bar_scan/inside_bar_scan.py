@@ -25,11 +25,12 @@ console.print(Panel.fit(
 # =====================================================
 INDEX_DIR = Path(r"H:\MarketForge\data\master\Indices_master")
 
-OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\candle_patterns")
+# ✅ NEW FOLDER
+OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\InsideBar")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 results = []
-all_dates = []   # ✅ FIX
+all_dates = []
 files = list(INDEX_DIR.glob("*.csv"))
 
 # =====================================================
@@ -49,9 +50,7 @@ for file in files:
         if not {"DATE","HIGH","LOW","CLOSE","OPEN"}.issubset(df.columns):
             continue
 
-        # =====================================================
-        # 🔥 DATE FIX
-        # =====================================================
+        # DATE FIX
         if df["DATE"].dtype in ["int64", "float64"]:
             df["DATE"] = pd.to_datetime(df["DATE"].astype(str), errors="coerce")
         else:
@@ -64,7 +63,6 @@ for file in files:
         if len(df) < 5:
             continue
 
-        # ✅ collect date
         all_dates.append(df["DATE"].max())
 
         today_row = df.iloc[-1]
@@ -83,7 +81,6 @@ for file in files:
 
             compression = today_range / prev_range
 
-            # TREND CONTEXT
             df["EMA20"] = df["CLOSE"].ewm(span=20).mean()
             trend = "UP" if today_row["CLOSE"] > df["EMA20"].iloc[-1] else "DOWN"
 
@@ -91,14 +88,16 @@ for file in files:
 
             results.append({
                 "Index": file.stem,
+                "Pattern": "InsideBar",
+                "Direction": "Bullish" if trend == "UP" else "Bearish",
                 "Date": today_row["DATE"].strftime("%Y-%m-%d"),
                 "Close": round(today_row["CLOSE"], 2),
                 "Compression": round(compression, 2),
-                "Trend": trend,
                 "Strength": strength
             })
 
-    except:
+    except Exception as e:
+        print(f"[red]Error in {file.name}: {e}[/red]")
         continue
 
 # =====================================================
@@ -110,6 +109,11 @@ else:
     final_date = datetime.now().strftime("%Y-%m-%d")
 
 OUT_FILE = OUT_DIR / f"index_insidebar_{final_date}.csv"
+
+# DEBUG
+print(f"\nDEBUG → Files Checked: {len(files)}")
+print(f"DEBUG → Signals Found: {len(results)}")
+print(f"DEBUG → Saving to: {OUT_FILE}")
 
 console.print(f"[yellow]📅 Data Date Used: {final_date}[/yellow]")
 
@@ -126,8 +130,13 @@ console.print(f"[blue]🔥 Signals Found:[/blue] {len(results)}")
 # =====================================================
 df_out = pd.DataFrame(results)
 
-if not df_out.empty:
-
+# ALWAYS SAVE
+if df_out.empty:
+    df_out = pd.DataFrame({
+        "Message": ["No Inside Bar Found"],
+        "Date": [final_date]
+    })
+else:
     df_out = df_out.sort_values("Compression")
 
     table = Table(title="🔵 INDEX INSIDE BAR")
@@ -137,21 +146,21 @@ if not df_out.empty:
 
     for _, row in df_out.iterrows():
 
-        color = "green" if row["Trend"] == "UP" else "red"
+        color = "green" if row["Direction"] == "Bullish" else "red"
 
         table.add_row(
             f"[{color}]{row['Index']}[/{color}]",
+            row["Pattern"],
+            f"[{color}]{row['Direction']}[/{color}]",
             row["Date"],
             str(row["Close"]),
             str(row["Compression"]),
-            row["Trend"],
             row["Strength"]
         )
 
     console.print(table)
 
-    df_out.to_csv(OUT_FILE, index=False)
-    console.print(f"\n[bold cyan]✔ Saved → {OUT_FILE}[/bold cyan]")
+# SAVE FILE
+df_out.to_csv(OUT_FILE, index=False)
 
-else:
-    console.print("\n[yellow]⚠ No Inside Bar Found[/yellow]")
+console.print(f"\n[bold cyan]✔ Saved → {OUT_FILE}[/bold cyan]")

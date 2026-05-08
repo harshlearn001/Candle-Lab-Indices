@@ -3,7 +3,6 @@
 
 from pathlib import Path
 import pandas as pd
-import numpy as np
 from datetime import datetime
 
 print("╭──────────────────────────────╮")
@@ -15,27 +14,26 @@ print("╰───────────────────────�
 # PATHS
 # =====================================================
 INDEX_DIR = Path(r"H:\MarketForge\data\master\Indices_master")
-
-OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\rsi")
+OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\RSI_Divergence")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 signals = []
 checked = 0
-all_dates = []   # ✅ FIX
+all_dates = []
 
 files = list(INDEX_DIR.glob("*.csv"))
 
 # =====================================================
-# RSI FUNCTION
+# RSI (WILDER)
 # =====================================================
 def calculate_rsi(df, period=14):
-    delta = df['Close'].diff()
+    delta = df['CLOSE'].diff()
 
     gain = delta.clip(lower=0)
     loss = -delta.clip(upper=0)
 
-    avg_gain = gain.rolling(period).mean()
-    avg_loss = loss.rolling(period).mean()
+    avg_gain = gain.ewm(alpha=1/period, adjust=False).mean()
+    avg_loss = loss.ewm(alpha=1/period, adjust=False).mean()
 
     rs = avg_gain / avg_loss
     df['RSI'] = 100 - (100 / (1 + rs))
@@ -46,12 +44,12 @@ def calculate_rsi(df, period=14):
 # SWING DETECTION
 # =====================================================
 def find_swings(df, window=5):
-    df['swing_high'] = df['High'][
-        df['High'] == df['High'].rolling(window, center=True).max()
+    df['SWING_HIGH'] = df['HIGH'][
+        df['HIGH'] == df['HIGH'].rolling(window, center=True).max()
     ]
 
-    df['swing_low'] = df['Low'][
-        df['Low'] == df['Low'].rolling(window, center=True).min()
+    df['SWING_LOW'] = df['LOW'][
+        df['LOW'] == df['LOW'].rolling(window, center=True).min()
     ]
 
     return df
@@ -67,38 +65,34 @@ for file in files:
         if df.empty:
             continue
 
-        df.columns = [c.strip().capitalize() for c in df.columns]
-        df.rename(columns={"Trade_date": "Date"}, inplace=True)
+        df.columns = [c.strip().upper() for c in df.columns]
+        df.rename(columns={"TRADE_DATE": "DATE"}, inplace=True)
 
-        if not {'Date','Open','High','Low','Close'}.issubset(df.columns):
+        if not {'DATE','OPEN','HIGH','LOW','CLOSE'}.issubset(df.columns):
             continue
 
-        # =====================================================
-        # 🔥 DATE FIX
-        # =====================================================
-        if df["Date"].dtype in ["int64", "float64"]:
-            df["Date"] = pd.to_datetime(df["Date"].astype(str), errors="coerce")
+        # DATE FIX
+        if df["DATE"].dtype in ["int64", "float64"]:
+            df["DATE"] = pd.to_datetime(df["DATE"].astype(str), errors="coerce")
         else:
-            df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+            df["DATE"] = pd.to_datetime(df["DATE"], errors="coerce")
 
-        df = df.dropna(subset=["Date"])
-        df = df[df["Date"] > "2000-01-01"]
-        df = df.sort_values("Date")
+        df = df.dropna(subset=["DATE"])
+        df = df[df["DATE"] > "2000-01-01"]
+        df = df.sort_values("DATE")
 
         if len(df) < 60:
             continue
 
-        # ✅ collect latest date
-        all_dates.append(df["Date"].max())
-
+        all_dates.append(df["DATE"].max())
         checked += 1
 
         df = calculate_rsi(df)
-        df['EMA50'] = df['Close'].ewm(span=50).mean()
+        df['EMA50'] = df['CLOSE'].ewm(span=50).mean()
         df = find_swings(df)
 
-        swing_lows = df.dropna(subset=['swing_low'])
-        swing_highs = df.dropna(subset=['swing_high'])
+        swing_lows = df.dropna(subset=['SWING_LOW'])
+        swing_highs = df.dropna(subset=['SWING_HIGH'])
 
         latest = df.iloc[-1]
 
@@ -111,19 +105,20 @@ for file in files:
             curr = swing_lows.iloc[-1]
 
             if (
-                curr['Low'] < prev['Low'] and
+                curr['LOW'] < prev['LOW'] and
                 curr['RSI'] > prev['RSI'] and
                 curr['RSI'] < 45 and
-                curr['Close'] > df['EMA50'].iloc[-1]
+                curr['CLOSE'] > df['EMA50'].iloc[-1]
             ):
 
                 strength = round(curr['RSI'] - prev['RSI'], 2)
 
                 signals.append({
                     "Index": file.stem,
-                    "Date": latest["Date"].strftime("%Y-%m-%d"),
-                    "Type": "BULLISH",
-                    "Close": round(latest['Close'],2),
+                    "Pattern": "RSI_Divergence",
+                    "Direction": "Bullish",
+                    "Date": latest["DATE"].strftime("%Y-%m-%d"),
+                    "Close": round(latest['CLOSE'],2),
                     "RSI": round(latest['RSI'],2),
                     "Strength": strength
                 })
@@ -139,19 +134,20 @@ for file in files:
             curr = swing_highs.iloc[-1]
 
             if (
-                curr['High'] > prev['High'] and
+                curr['HIGH'] > prev['HIGH'] and
                 curr['RSI'] < prev['RSI'] and
                 curr['RSI'] > 55 and
-                curr['Close'] < df['EMA50'].iloc[-1]
+                curr['CLOSE'] < df['EMA50'].iloc[-1]
             ):
 
                 strength = round(prev['RSI'] - curr['RSI'], 2)
 
                 signals.append({
                     "Index": file.stem,
-                    "Date": latest["Date"].strftime("%Y-%m-%d"),
-                    "Type": "BEARISH",
-                    "Close": round(latest['Close'],2),
+                    "Pattern": "RSI_Divergence",
+                    "Direction": "Bearish",
+                    "Date": latest["DATE"].strftime("%Y-%m-%d"),
+                    "Close": round(latest['CLOSE'],2),
                     "RSI": round(latest['RSI'],2),
                     "Strength": strength
                 })
@@ -174,37 +170,19 @@ OUT_FILE = OUT_DIR / f"index_rsi_divergence_{final_date}.csv"
 print(f"\n📅 Data Date Used: {final_date}")
 
 # =====================================================
-# OUTPUT
+# ALWAYS SAVE
 # =====================================================
 df_out = pd.DataFrame(signals)
 
-print("\n" + "─"*80)
-print("📊 INDEX DIVERGENCE SUMMARY")
-print("─"*80)
-print(f"Checked: {checked}")
-print(f"Signals: {len(df_out)}")
-
-if not df_out.empty:
-
+if df_out.empty:
+    df_out = pd.DataFrame({
+        "Message": ["No RSI Divergence"],
+        "Date": [final_date]
+    })
+else:
     df_out = df_out.sort_values("Strength", ascending=False)
-
-    print("\n📊 DIVERGENCE SIGNALS")
     print(df_out)
 
-    df_out.to_csv(OUT_FILE, index=False)
-    print(f"\n✔ Saved → {OUT_FILE}")
+df_out.to_csv(OUT_FILE, index=False)
 
-    print("\n🧠 MARKET INSIGHT")
-
-    bull = len(df_out[df_out["Type"]=="BULLISH"])
-    bear = len(df_out[df_out["Type"]=="BEARISH"])
-
-    if bull > bear:
-        print("🟢 Bullish reversal signals dominant")
-    elif bear > bull:
-        print("🔴 Bearish reversal signals dominant")
-    else:
-        print("⚖ Mixed / Neutral divergence")
-
-else:
-    print("\n❌ No divergence found")
+print(f"\n✔ Saved → {OUT_FILE}")

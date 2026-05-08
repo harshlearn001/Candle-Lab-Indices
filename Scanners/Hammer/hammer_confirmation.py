@@ -26,12 +26,10 @@ console.print(Panel.fit(
 # =====================================================
 INDEX_DIR = Path(r"H:\MarketForge\data\master\Indices_master")
 
-OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\candle_patterns")
+# ✅ SAME MASTER FOLDER
+OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\Hammer")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# =====================================================
-# DATE STORAGE
-# =====================================================
 all_dates = []
 
 # =====================================================
@@ -80,16 +78,13 @@ for file in files:
             continue
 
         df.columns = [c.strip().upper() for c in df.columns]
-
         df.rename(columns={"TRADE_DATE": "DATE"}, inplace=True)
 
         required = {'DATE','OPEN','HIGH','LOW','CLOSE'}
         if not required.issubset(df.columns):
             continue
 
-        # =====================================================
-        # 🔥 DATE FIX
-        # =====================================================
+        # DATE FIX
         if df["DATE"].dtype in ["int64", "float64"]:
             df["DATE"] = pd.to_datetime(df["DATE"].astype(str), errors="coerce")
         else:
@@ -102,7 +97,6 @@ for file in files:
         if len(df) < 10:
             continue
 
-        # ✅ collect date
         all_dates.append(df["DATE"].max())
 
         df = detect_hammer(df)
@@ -122,13 +116,16 @@ for file in files:
 
                 signals.append({
                     "Index": file.stem,
+                    "Pattern": "Hammer",
+                    "Direction": "Bullish",
                     "Date": confirm['DATE'].strftime("%Y-%m-%d"),
                     "Close": round(confirm['CLOSE'], 2),
                     "Strength": round(strength, 2),
                     "Type": rating
                 })
 
-    except:
+    except Exception as e:
+        print(f"[red]Error in {file.name}: {e}[/red]")
         continue
 
 # =====================================================
@@ -140,6 +137,11 @@ else:
     final_date = datetime.now().strftime("%Y-%m-%d")
 
 OUT_FILE = OUT_DIR / f"index_hammer_{final_date}.csv"
+
+# DEBUG
+print(f"\nDEBUG → Files Checked: {len(files)}")
+print(f"DEBUG → Signals Found: {len(signals)}")
+print(f"DEBUG → Saving to: {OUT_FILE}")
 
 console.print(f"[yellow]📅 Data Date Used: {final_date}[/yellow]")
 
@@ -156,8 +158,13 @@ console.print(f"[green]🔥 Signals Found:[/green] {len(signals)}")
 # =====================================================
 df_out = pd.DataFrame(signals)
 
-if not df_out.empty:
-
+# ALWAYS SAVE
+if df_out.empty:
+    df_out = pd.DataFrame({
+        "Message": ["No Hammer Found"],
+        "Date": [final_date]
+    })
+else:
     df_out = df_out.sort_values("Strength", ascending=False)
 
     table = Table(title="🟢 INDEX HAMMER + CONFIRMATION")
@@ -171,6 +178,8 @@ if not df_out.empty:
 
         table.add_row(
             f"[{color}]{row['Index']}[/{color}]",
+            row["Pattern"],
+            f"[{color}]{row['Direction']}[/{color}]",
             row["Date"],
             str(row["Close"]),
             str(row["Strength"]),
@@ -179,8 +188,7 @@ if not df_out.empty:
 
     console.print(table)
 
-    df_out.to_csv(OUT_FILE, index=False)
-    console.print(f"\n[bold green]✔ Saved → {OUT_FILE}[/bold green]")
+# SAVE FILE
+df_out.to_csv(OUT_FILE, index=False)
 
-else:
-    console.print("\n[red]❌ No Hammer Found[/red]")
+console.print(f"\n[bold green]✔ Saved → {OUT_FILE}[/bold green]")

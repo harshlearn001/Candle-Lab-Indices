@@ -1,107 +1,145 @@
 @echo off
+chcp 65001 >nul
 setlocal enabledelayedexpansion
+
+REM ======================================
+REM FORCE AUTO MODE DEFAULT
+REM ======================================
+if "%AUTO_MODE%"=="" set AUTO_MODE=1
+
+echo AUTO_MODE = %AUTO_MODE%
+
+REM ======================================
+REM PYTHON PATH
+REM ======================================
+set "PYTHON=C:\Users\Harshal\anaconda3\python.exe"
+
+REM ======================================
+REM PROJECT ROOT
+REM ======================================
+set "ROOT=H:\Candle-Lab-Indices"
+
+REM ======================================
+REM PAUSE CONTROL
+REM ======================================
+if /I "%AUTO_MODE%"=="1" (
+    set "PAUSE_CMD="
+) else (
+    set "PAUSE_CMD=pause"
+)
+
+REM ======================================
+REM HEADER
+REM ======================================
+cls
 
 echo ======================================
 echo   CANDLE-LAB INDEX PIPELINE STARTED
 echo ======================================
+echo.
 
-set start=%time%
-
-REM ======================================
-REM OPTIONAL: Activate Conda (safe method)
-REM ======================================
-CALL "C:\Users\Harshal\anaconda3\condabin\conda.bat" activate base
+set "start=%time%"
 
 REM ======================================
-REM FUNCTION CALLS
+REM RUN ALL SCANNERS
 REM ======================================
 
-REM PCR
-cd /d H:\Candle-Lab-Indices\Scanners\pcr_day
-call :run_script 01_pcr_engine.py
+call :run "%ROOT%\Scanners\pcr_day" "01_pcr_engine.py"
 
-REM ADX
-cd /d H:\Candle-Lab-Indices\Scanners\adx
-call :run_script 01_adx_index.py
+call :run "%ROOT%\Scanners\adx" "01_adx_index.py"
 
-REM ENGULFING
-cd /d H:\Candle-Lab-Indices\Scanners\engulfing_candle
-call :run_script 01_bullish_engulfing_exact.py
-call :run_script 02_bearish_engulfing_exact.py
+call :run "%ROOT%\Scanners\engulfing_candle" "01_bullish_engulfing_exact.py"
+call :run "%ROOT%\Scanners\engulfing_candle" "02_bearish_engulfing_exact.py"
 
-REM CANDLE PATTERNS
-cd /d H:\Candle-Lab-Indices\Scanners\gravestone_candle
-call :run_script 01_gravestone_doji_in_uptrend.py
+call :run "%ROOT%\Scanners\gravestone_candle" "01_gravestone_doji_in_uptrend.py"
 
-cd /d H:\Candle-Lab-Indices\Scanners\Hammer
-call :run_script hammer_confirmation.py
+call :run "%ROOT%\Scanners\Hammer" "hammer_confirmation.py"
 
-cd /d H:\Candle-Lab-Indices\Scanners\shooting_star
-call :run_script 01_shooting_star_uptrend.py
+call :run "%ROOT%\Scanners\shooting_star" "01_shooting_star_uptrend.py"
 
-cd /d H:\Candle-Lab-Indices\Scanners\hangingman
-call :run_script 01_hanging_man_scan.py
+call :run "%ROOT%\Scanners\hangingman" "01_hanging_man_scan.py"
 
-cd /d H:\Candle-Lab-Indices\Scanners\harami
-call :run_script 01_harami_scan.py
+call :run "%ROOT%\Scanners\harami" "01_harami_scan.py"
 
-cd /d H:\Candle-Lab-Indices\Scanners\inside_bar_scan
-call :run_script inside_bar_scan.py
+call :run "%ROOT%\Scanners\inside_bar_scan" "inside_bar_scan.py"
 
-cd /d H:\Candle-Lab-Indices\Scanners\nr7
-call :run_script fno_nr7_scan.py
+call :run "%ROOT%\Scanners\nr7" "fno_nr7_scan.py"
 
-REM MOMENTUM
-cd /d H:\Candle-Lab-Indices\Scanners\rsi
-call :run_script 01_rsi_scan.py
+call :run "%ROOT%\Scanners\rsi" "01_rsi_scan.py"
 
-cd /d H:\Candle-Lab-Indices\Scanners\rsi_divergence
-call :run_script 02_rsi_divergence_scan.py
+call :run "%ROOT%\Scanners\rsi_divergence" "02_rsi_divergence_scan.py"
 
-REM MORNING / EVENING
-cd /d H:\Candle-Lab-Indices\Scanners\morning_evening_star
-call :run_script 01_morning_star_scanner.py
-call :run_script 02_evening_star_scanner.py
+call :run "%ROOT%\Scanners\morning_evening_star" "01_morning_star_scanner.py"
+call :run "%ROOT%\Scanners\morning_evening_star" "02_evening_star_scanner.py"
 
-REM BREADTH (FIXED)
-cd /d H:\Candle-Lab-Indices\Scanners\breadth
-call :run_script 01_index_breadth_engine.py
+call :run "%ROOT%\Scanners\breadth" "01_index_breadth_engine.py"
 
-REM VWAP (ADDED)
-cd /d H:\Candle-Lab-Indices\Scanners\vwap
-call :run_script 01_vwap_index.py
+call :run "%ROOT%\Scanners\vwap" "01_vwap_index.py"
 
 REM ======================================
-REM END
+REM PIPELINE COMPLETED
 REM ======================================
+
 echo.
 echo ======================================
 echo   ALL INDEX SCANNERS COMPLETED
 echo ======================================
 
-set end=%time%
+set "end=%time%"
+
 echo Started at: %start%
 echo Ended at  : %end%
 
-pause
-exit /b
+echo.
 
+%PAUSE_CMD%
+
+exit /b 0
+
+REM ======================================
+REM ERROR HANDLER
+REM ======================================
+:error
+
+echo.
+echo ======================================
+echo ❌ PIPELINE FAILED
+echo ======================================
+echo Failed at step above
+echo.
+
+%PAUSE_CMD%
+
+exit /b 1
 
 REM ======================================
 REM FUNCTION
 REM ======================================
-:run_script
+:run
+
+set "SCRIPT_DIR=%~1"
+set "SCRIPT_NAME=%~2"
+
 echo --------------------------------------
-echo Running: %~1
+echo Running: %SCRIPT_NAME%
 echo --------------------------------------
 
-REM Use direct python path (FIX)
-"C:\Users\Harshal\anaconda3\python.exe" "%~1"
+cd /d "%SCRIPT_DIR%"
 
-IF %ERRORLEVEL% NEQ 0 (
-    echo ERROR in %~1
-) ELSE (
-    echo SUCCESS: %~1
+set "step_start=%time%"
+
+"%PYTHON%" "%SCRIPT_NAME%"
+
+set "step_end=%time%"
+
+if not "%ERRORLEVEL%"=="0" (
+    echo.
+    echo ❌ ERROR in %SCRIPT_NAME%
+    goto :error
 )
 
-exit /b
+echo ✅ SUCCESS: %SCRIPT_NAME%
+echo Time: %step_start% → %step_end%
+echo.
+
+goto :eof

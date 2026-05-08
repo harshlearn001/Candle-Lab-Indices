@@ -15,11 +15,12 @@ print("╰───────────────────────�
 # =====================================================
 INDEX_DIR = Path(r"H:\MarketForge\data\master\Indices_master")
 
-OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\structure")
+# ✅ FIXED NAME
+OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\Red_Volume")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 results = []
-all_dates = []   # ✅ FIX
+all_dates = []
 
 files = list(INDEX_DIR.glob("*.csv"))
 
@@ -40,9 +41,7 @@ for file in files:
         if not {"DATE","OPEN","HIGH","LOW","CLOSE"}.issubset(df.columns):
             continue
 
-        # =====================================================
-        # 🔥 DATE FIX
-        # =====================================================
+        # DATE FIX
         if df["DATE"].dtype in ["int64", "float64"]:
             df["DATE"] = pd.to_datetime(df["DATE"].astype(str), errors="coerce")
         else:
@@ -55,7 +54,6 @@ for file in files:
         if len(df) < 4:
             continue
 
-        # ✅ collect date
         all_dates.append(df["DATE"].max())
 
         last4 = df.tail(4)
@@ -77,16 +75,23 @@ for file in files:
 
         if red and rising_pressure:
 
+            range_growth = ranges[3] / ranges[0]
+            strength = "STRONG" if range_growth > 2 else "NORMAL"
+
             results.append({
                 "Index": file.stem,
+                "Pattern": "4RedExpansion",
+                "Direction": "Bearish",
                 "Date": last4.iloc[-1]["DATE"].strftime("%Y-%m-%d"),
                 "Close": round(last4.iloc[-1]["CLOSE"], 2),
-                "RangeGrowth": round(ranges[3] / ranges[0], 2)
+                "RangeGrowth": round(range_growth, 2),
+                "Strength": strength
             })
 
             print(f"{file.stem} → 🔻 BREAKDOWN PRESSURE")
 
-    except:
+    except Exception as e:
+        print(f"Error in {file.name}: {e}")
         continue
 
 # =====================================================
@@ -109,9 +114,16 @@ df_out = pd.DataFrame(results)
 print("\n📊 SUMMARY")
 print(f"Signals Found: {len(df_out)}")
 
-if not df_out.empty:
-    print(df_out)
-    df_out.to_csv(OUT_FILE, index=False)
-    print(f"\n✔ Saved → {OUT_FILE}")
+# ALWAYS SAVE
+if df_out.empty:
+    df_out = pd.DataFrame({
+        "Message": ["No Breakdown Pressure Found"],
+        "Date": [final_date]
+    })
 else:
-    print("❌ No index breakdown pressure")
+    df_out = df_out.sort_values("RangeGrowth", ascending=False)
+    print(df_out)
+
+df_out.to_csv(OUT_FILE, index=False)
+
+print(f"\n✔ Saved → {OUT_FILE}")

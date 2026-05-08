@@ -1,19 +1,42 @@
 # =====================
-# DATA (IGNORE OUTPUT FILES)
+# ANALYSIS OUTPUTS
+# =====================
+analysis/**
+!analysis/.gitkeep
+
+# =====================
+# DATA (RAW + GENERATED)
+# =====================
+data/**
+!data/.gitkeep
+
+MarketForge/data/**
+!MarketForge/data/.gitkeep
+
+# =====================
+# LARGE FILE TYPES (ONLY IN DATA FOLDERS)
 # =====================
 analysis/**/*.csv
-analysis/**/*.xlsx
+data/**/*.csv
+MarketForge/data/**/*.csv
 
-data/
-logs/
+*.parquet
+*.feather
+*.h5
 
 # =====================
-# IGNORE LOCAL CONFIG FILES
+# LOGS
+# =====================
+logs/**
+*.log
+*.out
+
+# =====================
+# CONFIG (KEEP IMPORTANT FILES)
 # =====================
 config/*.csv
-
-# (OPTIONAL) Keep template config files
 !config/*.example.csv
+!config/fno_symbols.csv   # ✅ KEEP THIS
 
 # =====================
 # PYTHON
@@ -40,14 +63,20 @@ env/
 Thumbs.db
 
 # =====================
-# TEMP / LOGS
+# TEMP FILES
 # =====================
-*.log
-*.out
 *.tmp
+*.cache
 
 # =====================
 # BACKUPS
 # =====================
 *.bak
 *.old
+
+# =====================
+# FUTURE: MODELS / SIGNALS
+# =====================
+models/**
+signals/**
+exports/**

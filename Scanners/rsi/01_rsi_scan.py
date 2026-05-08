@@ -5,9 +5,6 @@ from pathlib import Path
 import pandas as pd
 from datetime import datetime
 
-# =====================================================
-# HEADER
-# =====================================================
 print("╭──────────────────────────────╮")
 print("│ INDEX RSI SCANNER (PRO+)    │")
 print("│ Market Strength Engine      │")
@@ -17,11 +14,11 @@ print("╰───────────────────────�
 # PATHS
 # =====================================================
 INDEX_DIR = Path(r"H:\MarketForge\data\master\Indices_master")
-OUTPUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\rsi")
+OUTPUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\RSI")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # =====================================================
-# RSI FUNCTION
+# RSI (WILDER METHOD)
 # =====================================================
 def calculate_rsi(df, period=14):
     delta = df['close'].diff()
@@ -29,8 +26,8 @@ def calculate_rsi(df, period=14):
     gain = delta.clip(lower=0)
     loss = -delta.clip(upper=0)
 
-    avg_gain = gain.rolling(period).mean()
-    avg_loss = loss.rolling(period).mean()
+    avg_gain = gain.ewm(alpha=1/period, adjust=False).mean()
+    avg_loss = loss.ewm(alpha=1/period, adjust=False).mean()
 
     rs = avg_gain / avg_loss
     df['rsi'] = 100 - (100 / (1 + rs))
@@ -38,26 +35,26 @@ def calculate_rsi(df, period=14):
     return df
 
 # =====================================================
-# RSI CLASSIFICATION
+# CLASSIFICATION
 # =====================================================
 def classify_rsi(rsi):
     if rsi < 30:
-        return "OVERSOLD"
+        return "OVERSOLD", "Bullish"
     elif rsi < 45:
-        return "WEAK"
+        return "WEAK", "Bearish"
     elif rsi < 60:
-        return "NEUTRAL"
+        return "NEUTRAL", "Neutral"
     elif rsi < 70:
-        return "STRONG"
+        return "STRONG", "Bullish"
     else:
-        return "OVERBOUGHT"
+        return "OVERBOUGHT", "Bearish"
 
 # =====================================================
 # MAIN LOOP
 # =====================================================
 all_data = []
 checked = 0
-all_dates = []   # ✅ FIX
+all_dates = []
 
 files = list(INDEX_DIR.glob("*.csv"))
 
@@ -69,15 +66,12 @@ for file in files:
             continue
 
         df.columns = [c.strip().lower() for c in df.columns]
-
         df.rename(columns={"trade_date": "date"}, inplace=True)
 
         if not {'date','close'}.issubset(df.columns):
             continue
 
-        # =====================================================
-        # 🔥 DATE FIX
-        # =====================================================
+        # DATE FIX
         if df["date"].dtype in ["int64", "float64"]:
             df["date"] = pd.to_datetime(df["date"].astype(str), errors='coerce')
         else:
@@ -90,9 +84,7 @@ for file in files:
         if len(df) < 50:
             continue
 
-        # ✅ collect latest date
         all_dates.append(df["date"].max())
-
         checked += 1
 
         df = calculate_rsi(df)
@@ -105,27 +97,26 @@ for file in files:
 
         momentum = "RISING" if rsi > prev_rsi else "FALLING"
 
+        zone, direction = classify_rsi(rsi)
+
         all_data.append({
             "Index": file.stem,
+            "Pattern": "RSI",
+            "Direction": direction,
             "Date": latest["date"].strftime("%Y-%m-%d"),
             "RSI": round(rsi, 2),
             "Momentum": momentum,
-            "Zone": classify_rsi(rsi)
+            "Zone": zone
         })
 
-    except:
+    except Exception as e:
+        print(f"Error in {file.name}: {e}")
         continue
 
 # =====================================================
 # DATAFRAME
 # =====================================================
 df_all = pd.DataFrame(all_data)
-
-if df_all.empty:
-    print("❌ No data processed")
-    exit()
-
-df_all = df_all.sort_values("RSI")
 
 # =====================================================
 # FINAL DATE
@@ -136,51 +127,29 @@ else:
     final_date = datetime.now().strftime("%Y-%m-%d")
 
 # =====================================================
-# DISPLAY
+# ALWAYS SAVE
 # =====================================================
-print(f"\n📅 Data Date Used: {final_date}")
-
-print("\n📊 ALL INDEX RSI VALUES")
-print(df_all.to_string(index=False))
-
-# =====================================================
-# ZONES
-# =====================================================
-oversold = df_all[df_all["RSI"] < 30]
-overbought = df_all[df_all["RSI"] > 70]
-
-print("\n🟢 RSI < 30")
-print(oversold if not oversold.empty else "None")
-
-print("\n🔴 RSI > 70")
-print(overbought if not overbought.empty else "None")
+if df_all.empty:
+    df_all = pd.DataFrame({
+        "Message": ["No RSI Data"],
+        "Date": [final_date]
+    })
+else:
+    df_all = df_all.sort_values("RSI")
 
 # =====================================================
-# MARKET REGIME
+# MARKET SCORE
 # =====================================================
 score = 0
 
 for _, row in df_all.iterrows():
-    if row["RSI"] > 60:
+    if row.get("RSI", 50) > 60:
         score += 1
-    elif row["RSI"] < 40:
+    elif row.get("RSI", 50) < 40:
         score -= 1
 
-print("\n🧠 MARKET INSIGHT")
-
-if score >= 5:
-    print("🚀 STRONG BULLISH MARKET")
-elif score <= -5:
-    print("🔻 STRONG BEARISH MARKET")
-elif len(overbought) >= 3:
-    print("⚠ Overbought → Pullback risk")
-elif len(oversold) >= 3:
-    print("🔥 Oversold → Bounce likely")
-else:
-    print("⚖ Neutral")
-
 # =====================================================
-# SAVE
+# OUTPUT
 # =====================================================
 timestamp_file = OUTPUT_DIR / f"index_rsi_{final_date}.csv"
 latest_file = OUTPUT_DIR / "index_rsi_latest.csv"
@@ -188,14 +157,17 @@ latest_file = OUTPUT_DIR / "index_rsi_latest.csv"
 df_all.to_csv(timestamp_file, index=False)
 df_all.to_csv(latest_file, index=False)
 
-print("\n💾 FILES SAVED")
-print(f"→ {timestamp_file}")
-print(f"→ {latest_file}")
+print(f"\n📅 Data Date Used: {final_date}")
+print(f"\n✔ Saved → {timestamp_file}")
 
 # =====================================================
-# SUMMARY
+# MARKET INSIGHT
 # =====================================================
-print("\n📊 SUMMARY")
-print(f"Checked Files: {checked}")
-print(f"Oversold: {len(oversold)}")
-print(f"Overbought: {len(overbought)}")
+print("\n🧠 MARKET INSIGHT")
+
+if score >= 5:
+    print("🚀 STRONG BULLISH MARKET")
+elif score <= -5:
+    print("🔻 STRONG BEARISH MARKET")
+else:
+    print("⚖ NEUTRAL / MIXED")

@@ -16,12 +16,13 @@ print("╰───────────────────────�
 # =====================================================
 INDEX_DIR = Path(r"H:\MarketForge\data\master\Indices_master")
 
-OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\candle_patterns")
+# ✅ FIXED FOLDER
+OUT_DIR = Path(r"H:\Candle-Lab-Indices\analysis\index\ShootingStar")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 results = []
 checked = 0
-all_dates = []   # ✅ FIX
+all_dates = []
 
 files = list(INDEX_DIR.glob("*.csv"))
 
@@ -42,9 +43,7 @@ for file in files:
         if not {"DATE","OPEN","HIGH","LOW","CLOSE"}.issubset(df.columns):
             continue
 
-        # =====================================================
-        # 🔥 DATE FIX
-        # =====================================================
+        # DATE FIX
         if df["DATE"].dtype in ["int64", "float64"]:
             df["DATE"] = pd.to_datetime(df["DATE"].astype(str), errors="coerce")
         else:
@@ -57,9 +56,7 @@ for file in files:
         if len(df) < 20:
             continue
 
-        # ✅ collect latest date
         all_dates.append(df["DATE"].max())
-
         checked += 1
 
         # =====================================================
@@ -115,6 +112,8 @@ for file in files:
 
             results.append({
                 "Index": file.stem,
+                "Pattern": "ShootingStar",
+                "Direction": "Bearish",
                 "Date": c["DATE"].strftime("%Y-%m-%d"),
                 "Close": round(cl, 2),
                 "UpperWick%": round(upper_pct*100,2),
@@ -140,34 +139,23 @@ OUT_FILE = OUT_DIR / f"index_shooting_star_{final_date}.csv"
 print(f"\n📅 Data Date Used: {final_date}")
 
 # =====================================================
-# OUTPUT
+# ALWAYS SAVE
 # =====================================================
 df_out = pd.DataFrame(results)
 
-print("\n" + "─"*80)
-print("📊 INDEX SHOOTING STAR SUMMARY")
-print("─"*80)
+print("\n📊 SUMMARY")
 print(f"Checked: {checked}")
 print(f"Signals: {len(df_out)}")
 
-if not df_out.empty:
-
+if df_out.empty:
+    df_out = pd.DataFrame({
+        "Message": ["No Shooting Star Found"],
+        "Date": [final_date]
+    })
+else:
     df_out = df_out.sort_values("UpperWick%", ascending=False)
-
-    print("\n🔴 TOP EXHAUSTION INDICES")
     print(df_out)
 
-    df_out.to_csv(OUT_FILE, index=False)
-    print(f"\n✔ Saved → {OUT_FILE}")
+df_out.to_csv(OUT_FILE, index=False)
 
-    print("\n🧠 MARKET INSIGHT")
-
-    if len(df_out) >= 3:
-        print("⚠ Broad market exhaustion")
-    elif len(df_out) > 0:
-        print("⚠ Selective exhaustion")
-    else:
-        print("🚫 No exhaustion signal")
-
-else:
-    print("\n❌ No Shooting Star found")
+print(f"\n✔ Saved → {OUT_FILE}")
